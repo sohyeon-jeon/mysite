@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - postgre_data:/var/lib/postgresql/data
+    ports:
+      -  "${POSTGRES_PORT}"
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    env_file:
+      - .env
+  
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000 
+    volumes:
+      - .:/web
+    ports:
+      - "8000:8000"
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    depends_on:
+      - db
+
+volumes:
+  postgre_data:
