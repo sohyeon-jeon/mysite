@@ -42,5 +42,20 @@ services:
     env_file:
       - .env
 
+  django_debug:
+    container_name: django_debug    
+    build: ./mysite
+    image: mysite/django/debug
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./mysite:/srv/mysite
+    ports:
+      - 8000:8000
+      - 3000:3000
+    depends_on:
+      - db
+    env_file:
+      - .env.debug
+
 volumes:
   postgre_data:
